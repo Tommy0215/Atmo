@@ -52,11 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Image.asset('assets/objects/sleep_neochi_man.png'),
-          ),
-
           Positioned( 
             left: _position.dx,
             top: _position.dy,
