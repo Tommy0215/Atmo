@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test_game/movable_object.dart';
+import 'draggable_item.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,9 +32,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Offset _position = Offset(300, 500);
-  bool _isDragging = false;
-  
+
+  List<MovableObject> objects = [
+    MovableObject(position: Offset(100, 200), imagePath: 'assets/objects/sleep_neochi_man.png'),
+    MovableObject(position: Offset(200, 400), imagePath: 'assets/objects/sleep_neochi_woman.png')
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,47 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
               image: DecorationImage(
                 image: AssetImage('assets/backgrounds/forest.jpeg'), // Path to your image
                 fit: BoxFit.cover, // Adjust how the image fits the container
-              ),
-            ),
-          ),
-
-          Positioned( 
-            left: _position.dx,
-            top: _position.dy,
-            child: GestureDetector(
-              onPanStart: (_) {
-                setState(() => _isDragging = true);
-              },
-              onPanEnd: (_) {
-                setState(() => _isDragging = false);
-              },
-              onPanUpdate: (details) {
-                setState(() {
-                  _position = Offset(
-                    (_position.dx + details.delta.dx).clamp(0.0, MediaQuery.of(context).size.width - 100),
-                    (_position.dy + details.delta.dy).clamp(0.0, MediaQuery.of(context).size.height - 100),
-                  );
-                });
-              },
-              child: AnimatedOpacity(
-                opacity: _isDragging ? 0.7 : 1.0, 
-                duration: const Duration(milliseconds: 0),
-                child: Image.asset('assets/objects/sleep_neochi_woman.png'),
-              ),
+              )
             )
           ),
+
+          for (int i = 0; i < objects.length; i++)
+            DraggableItem(
+              object: objects[i],
+              onUpdate: (newPosition) {
+                setState(() {
+                  objects[i].position = newPosition;
+                });
+              },
+            ),
         ], // Stack children
       ),
-      
-      
-
-
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Fooled',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
